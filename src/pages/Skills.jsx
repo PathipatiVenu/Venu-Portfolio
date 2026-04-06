@@ -36,45 +36,55 @@ function Skills() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20">
-      <div className="text-center mb-12 md:mb-20">
+    <div className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-20">
+      <div className="text-center mb-16 md:mb-20">
         <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-4 uppercase tracking-tight">
           Technical <span className="text-indigo-600">Stack</span>
         </h2>
         <p className="text-slate-500 font-medium text-sm md:text-base">
-          {/* Change text for mobile context */}
+          {/* Context-aware instruction for different devices */}
           <span className="hidden md:inline">Hover over an icon to preview</span>
           <span className="md:hidden">Tap an icon to preview</span>
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
         {categories.map((cat, index) => (
-          <div key={index} className="bg-white p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-xl relative">
-            <h3 className="text-[10px] md:text-xs font-black mb-8 md:mb-12 text-indigo-500 uppercase tracking-[0.2em] text-center border-b pb-4">
+          <div key={index} className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-100 shadow-xl relative">
+            <h3 className="text-[10px] md:text-xs font-black mb-10 md:mb-12 text-indigo-500 uppercase tracking-[0.2em] text-center border-b pb-4">
               {cat.name}
             </h3>
             
-            <div className="grid grid-cols-2 gap-y-10 md:gap-y-16">
+            <div className="grid grid-cols-2 gap-y-12 md:gap-y-16">
               {cat.items.map((skill, i) => (
-                <div key={i} className="flex flex-col items-center relative group cursor-pointer">
-                  {/* THE HOVER POP-UP (Hidden on very small screens to avoid overflow, or scaled down) */}
-                  <div className="absolute -top-28 left-1/2 -translate-x-1/2 w-24 h-24 md:w-32 md:h-32 bg-white rounded-2xl shadow-2xl border border-slate-100 p-2 md:p-4 opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-110 md:group-hover:scale-125 pointer-events-none transition-all duration-300 z-50 flex flex-col items-center justify-center">
-                    <img src={skill.img} alt={skill.name} className="w-12 h-12 md:w-20 md:h-20 object-contain mb-1 md:mb-2" />
-                    <span className="text-[8px] md:text-[10px] font-bold text-indigo-600 uppercase text-center">{skill.name}</span>
-                    <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white rotate-45 border-r border-b border-slate-100"></div>
+                <div 
+                  key={i} 
+                  className="flex flex-col items-center relative group cursor-pointer"
+                >
+                  {/* THE HOVER POP-UP: Hidden on mobile ('hidden'), flex on desktop ('md:flex') */}
+                  <div className="hidden md:flex absolute -top-32 left-1/2 -translate-x-1/2 w-32 h-32 bg-white rounded-2xl shadow-2xl border border-slate-100 p-4 opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-110 pointer-events-none transition-all duration-300 z-50 flex-col items-center justify-center">
+                    <img 
+                      src={skill.img} 
+                      srcSet={`${skill.img} 1x, ${skill.img} 2x`} 
+                      alt={skill.name} 
+                      className="w-20 h-20 object-contain mb-2" 
+                    />
+                    <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-tighter">
+                      {skill.name}
+                    </span>
+                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45 border-r border-b border-slate-100"></div>
                   </div>
 
-                  {/* STATIC ICON */}
-                  <div className="w-12 h-12 md:w-16 md:h-16 mb-2 md:mb-3 flex items-center justify-center transition-transform duration-300 group-hover:scale-90 md:group-hover:opacity-50">
+                  {/* STATIC ICON: No grayscale on mobile, subtle scale on active tap */}
+                  <div className="w-14 h-14 md:w-16 md:h-16 mb-3 flex items-center justify-center transition-all duration-300 active:scale-90 group-hover:scale-110">
                     <img 
                       src={skill.img} 
                       alt={skill.name} 
-                      className="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all"
+                      className="max-w-full max-h-full object-contain md:grayscale md:group-hover:grayscale-0 transition-all duration-500 grayscale-0"
                     />
                   </div>
                   
-                  <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-indigo-600 transition-colors text-center px-1">
+                  <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-500 md:text-slate-400 md:group-hover:text-indigo-600 transition-colors text-center px-1">
                     {skill.name}
                   </span>
                 </div>
