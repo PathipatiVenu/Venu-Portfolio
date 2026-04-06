@@ -15,8 +15,7 @@ const Home = () => {
         <ParticlesBg />
 
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center relative z-10">
-          
-          {/* IMAGE SIDE: Mobile-optimized scaling */}
+    
           <div className="order-1 md:order-2 relative group px-2 sm:px-0">
             <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-[2.5rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
             {/* THE IMAGE CONTAINER */}
