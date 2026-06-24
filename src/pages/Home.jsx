@@ -54,7 +54,7 @@ const Home = () => {
             {/* Professional Bio */}
             <p className="text-base md:text-xl text-slate-400 max-w-md md:max-w-xl mx-auto md:mx-0 font-normal leading-relaxed mb-8">
               Transforming complex data into <span className="text-white font-semibold">secure, scalable architectures</span>. 
-              Specialized in Full-Stack ecosystems and deep learning solutions and devops with me .
+              Specialized in Full-Stack ecosystems and deep learning solutions devsecops .
             </p>
             
             {/* Tech Pills: Flex-center for mobile */}
