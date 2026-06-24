@@ -108,7 +108,7 @@ const Contract = () => {
       {/* Footer Info */}
       <div className="mt-28 pt-10 border-t border-slate-800/50 text-center">
         <p className="text-slate-500 text-[11px] font-black uppercase tracking-[0.4em]">
-          © {new Date().getFullYear()} Venu Babu Pathipati • Built with React & Tailwind
+          © {new Date().getFullYear()} Venu  Pathipati • Built with React & Tailwind
         </p>
       </div>
     </div>
