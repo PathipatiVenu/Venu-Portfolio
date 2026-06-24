@@ -1,47 +1,65 @@
-name: Deploy to AWS
+name: Frontend CI/CD
 
 on:
   push:
     branches:
       - main
 
+env:
+  ECR_REPOSITORY: my-app
+  AWS_REGION: us-east-1
+
 jobs:
-  build-test-deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
+
+    - name: Checkout Code
       uses: actions/checkout@v4
 
-    # ✅ Install Node (needed for tests)
-    - name: Setup Node
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
-
-    # ✅ Install dependencies
-    - name: Install dependencies
-      run: npm install
-
-
-    - name: Configure AWS credentials
+    - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+        aws-region: ${{ env.AWS_REGION }}
 
     - name: Login to ECR
+      id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
 
-    # ✅ Build Docker ONLY for production (no tests inside)
     - name: Build Docker Image
-      run: docker build -t my-app .
+      run: |
+        docker build -t my-app .
 
     - name: Tag Image
       run: |
-        docker tag my-app:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-app:latest
+        docker tag my-app:latest \
+        ${{ steps.login-ecr.outputs.registry }}/my-app:latest
 
     - name: Push Image
       run: |
-        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-app:latest
+        docker push \
+        ${{ steps.login-ecr.outputs.registry }}/my-app:latest
+
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          aws ecr get-login-password --region ap-south-1 | \
+          docker login --username AWS --password-stdin \
+          123456789012.dkr.ecr.ap-south-1.amazonaws.com
+
+          docker pull 123456789012.dkr.ecr.ap-south-1.amazonaws.com/my-app:latest
+
+          docker stop my-app || true
+          docker rm my-app || true
+
+          docker run -d \
+            --name my-app \
+            -p 80:80 \
+            123456789012.dkr.ecr.us-east-1.amazonaws.com/my-app:latest
