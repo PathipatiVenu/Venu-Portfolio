@@ -13,7 +13,21 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Configure AWS
+    # ✅ Install Node (needed for tests)
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    # ✅ Install dependencies
+    - name: Install dependencies
+      run: npm install
+
+    # ✅ Run tests OUTSIDE Docker
+    - name: Run Tests
+      run: npm test
+
+    - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -23,20 +37,14 @@ jobs:
     - name: Login to ECR
       uses: aws-actions/amazon-ecr-login@v2
 
+    # ✅ Build Docker ONLY for production (no tests inside)
     - name: Build Docker Image
-      run: |
-        docker build -t my-app .
-
-    - name: Run Tests
-      run: |
-        docker run --rm my-app npm test
+      run: docker build -t my-app .
 
     - name: Tag Image
       run: |
-        docker tag my-app:latest \
-        ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-app:latest
+        docker tag my-app:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-app:latest
 
     - name: Push Image
       run: |
-        docker push \
-        ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-app:latest
+        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-app:latest
